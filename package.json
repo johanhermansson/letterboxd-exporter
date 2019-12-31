@@ -1,0 +1,21 @@
+{
+  "name": "letterboxed2taste",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node letterboxd-export.js",
+    "letterboxd-export": "node letterboxd-export.js",
+    "taste-import": "node taste-import.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Johan Hermansson <johan@sumway.se>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^3.1.0",
+    "cookie": "^0.4.0",
+    "got": "^10.2.0",
+    "lowdb": "^1.0.0",
+    "promise-crawler": "^0.1.0"
+  }
+}
