@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node letterboxd-export.js",
+    "start": "node letterboxd-export.js && node taste-import.js",
     "letterboxd-export": "node letterboxd-export.js",
     "taste-import": "node taste-import.js",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,9 +1,10 @@
 // Your Letterboxd username should be but here
-const LETTERBOXD_USERNAME = "oan";
+const LETTERBOXD_USERNAME = "username";
 
-// Set this to true if you are up to date, but want to prepare your local cache for future use.
+// Set this to true if you are already up to date, but want to prepare your local cache for future use.
 // When a movie is rated on Taste, your local cache will be changed to true for that movie
-const TASTE_DEFAULT_STATUS = false;
+// Set the value to null if it should be unchanged on update
+const TASTE_DEFAULT_STATUS = null;
 
 const fs = require("fs");
 const PromiseCrawler = require("promise-crawler");
@@ -52,12 +53,17 @@ const handleLetterBoxdResponse = ({ $ }) => {
     const found = movies.find({ letterboxdId }).value();
 
     if (found) {
+      const updatedObj = {
+        letterboxdRating
+      };
+
+      if (tasteStatus !== null) {
+        updatedObj.tasteStatus = !!TASTE_DEFAULT_STATUS;
+      }
+
       movies
         .find({ letterboxdId })
-        .assign({
-          letterboxdRating,
-          tasteStatus: TASTE_DEFAULT_STATUS
-        })
+        .assign(updatedObj)
         .write();
     } else {
       movies
@@ -65,7 +71,8 @@ const handleLetterBoxdResponse = ({ $ }) => {
           letterboxdId,
           title,
           letterboxdRating,
-          tasteStatus: TASTE_DEFAULT_STATUS
+          tasteStatus:
+            TASTE_DEFAULT_STATUS === null ? false : TASTE_DEFAULT_STATUS
         })
         .write();
     }

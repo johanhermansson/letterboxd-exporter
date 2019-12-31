@@ -12,7 +12,7 @@ Open the file `letterboxd-export.js`.
 
 Change `LETTERBOXD_USERNAME` to your username.
 
-If you already have updated Taste with your ratings, but wants to use this script from now on, change `TASTE_DEFAULT_STATUS` to `true` (or set to `false` if you want to reset your current local cache).
+If you already have updated Taste.io with your ratings, force `TASTE_DEFAULT_STATUS` to `true`. If you want to force update all ratings, set it to `false`. Otherwise keep the `null` value, then the script will look at your local cache and only rate if needed.
 
 ### Start exporting
 
@@ -37,3 +37,11 @@ Login to taste.io and go to your home page. Open your browser's developer tools 
 `npm run taste-import`
 
 The script will output `NOT FOUND: {movie title}` and `NOT RATED: {movie title}` if rating problems occur.
+
+## Combine export and import
+
+When you already have a `movies.json` file, and want to run the exporter, then the importer for all new ratings.
+
+It's recommended to use `TASTE_DEFAULT_STATUS = null;` for this.
+
+`npm start`
