@@ -12,7 +12,7 @@
   "author": "Johan Hermansson <johan@sumway.se>",
   "license": "MIT",
   "dependencies": {
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "cookie": "^0.4.0",
     "got": "^11.8.5",
     "lowdb": "^1.0.0",
