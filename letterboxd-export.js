@@ -45,11 +45,16 @@ const handleLetterBoxdResponse = ({ $ }) => {
     const $li = $(el);
     const $img = $("img.image", $li);
     const $poster = $(".film-poster", $li);
+    const $ratingEl= $(".poster-viewingdata > .rating", $li);
 
     const letterboxdId = parseInt($poster.data("filmId"));
-    const letterboxdRating = parseInt($li.data("ownerRating"));
-    const title = $img.attr("alt");
 
+    let letterboxdRating = 0;
+    if($ratingEl.prop('name') !== undefined){
+        const ratingStr = $ratingEl.attr('class')
+        letterboxdRating = parseInt(ratingStr.substring(ratingStr.lastIndexOf('-') + 1));
+    }
+    const title = $img.attr("alt");
     const found = movies.find({ letterboxdId }).value();
 
     if (found) {
@@ -57,7 +62,7 @@ const handleLetterBoxdResponse = ({ $ }) => {
         letterboxdRating
       };
 
-      if (tasteStatus !== null) {
+      if (TASTE_DEFAULT_STATUS !== null) {
         updatedObj.tasteStatus = !!TASTE_DEFAULT_STATUS;
       }
 

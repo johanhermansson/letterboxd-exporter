@@ -32,6 +32,10 @@ async.eachLimit(
   movies,
   REQUEST_LIMIT,
   async ({ letterboxdId: id, title, letterboxdRating }) => {
+    if(letterboxdRating === 0){
+        console.log(`NOT RATED: ${title}`);
+        return false;
+    }
     const searchResponse = await got(
       `https://www.taste.io/api/movies/search?q=${encodeURIComponent(title)}`,
       {
