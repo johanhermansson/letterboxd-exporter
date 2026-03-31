@@ -13,9 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "async": "^3.2.2",
-    "cookie": "^0.4.0",
-    "got": "^11.8.5",
-    "lowdb": "^1.0.0",
-    "promise-crawler": "^0.1.0"
+    "cheerio": "^1.0.0",
+    "cookie": "^1.0.0",
+    "got": "^11.8.5"
   }
 }
