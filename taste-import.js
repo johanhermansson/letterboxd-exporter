@@ -7,8 +7,7 @@ const REQUEST_LIMIT = 10;
 const got = require("got");
 const cookie = require("cookie");
 const async = require("async");
-const low = require("lowdb");
-const FileSync = require("lowdb/adapters/FileSync");
+const { getMovies, upsertMovie } = require("./db");
 
 const serializeCookie = obj => {
   return Object.keys(obj)
@@ -18,15 +17,7 @@ const serializeCookie = obj => {
 
 const mapRating = rating => [null, 1, 1, 1, 2, 2, 3, 3, 4, 4, 4][rating];
 
-const adapter = new FileSync("movies.json");
-const db = low(adapter);
-
-db.defaults({ movies: [] }).write();
-
-const movies = db
-  .get("movies")
-  .filter(({ tasteStatus }) => !tasteStatus)
-  .value();
+const movies = getMovies().filter(({ tasteStatus }) => !tasteStatus);
 
 async.eachLimit(
   movies,
@@ -81,13 +72,10 @@ async.eachLimit(
       return false;
     }
 
-    db.get("movies")
-      .find({ letterboxdId: id })
-      .assign({
-        tasteRating: updatedRating,
-        tasteStatus: true
-      })
-      .write();
+    upsertMovie(id, {
+      tasteRating: updatedRating,
+      tasteStatus: true
+    });
 
     return true;
   },

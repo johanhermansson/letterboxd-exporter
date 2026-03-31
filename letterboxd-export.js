@@ -6,31 +6,20 @@ const LETTERBOXD_USERNAME = "username";
 // Set the value to null if it should be unchanged on update
 const TASTE_DEFAULT_STATUS = null;
 
-const fs = require("fs");
-const PromiseCrawler = require("promise-crawler");
-const low = require("lowdb");
-const FileSync = require("lowdb/adapters/FileSync");
-
-const adapter = new FileSync("movies.json");
-const db = low(adapter);
-
-db.defaults({ movies: [] }).write();
-
-const crawler = new PromiseCrawler({
-  maxConnections: 10,
-  retries: 3
-});
+const got = require("got");
+const cheerio = require("cheerio");
+const { findMovie, upsertMovie } = require("./db");
 
 const LETTERBOXD_FILMS_BASE = `https://letterboxd.com/${LETTERBOXD_USERNAME}/films/`;
 
 let LETTERBOXD_MAX_PAGES = 0;
 
-const movies = db.get("movies");
-
-const getLetterboxdPage = ({ page }) =>
-  crawler.request({
-    url: `${LETTERBOXD_FILMS_BASE}${page > 1 ? `page/${page}/` : ""}`
-  });
+const getLetterboxdPage = async ({ page }) => {
+  const url = `${LETTERBOXD_FILMS_BASE}${page > 1 ? `page/${page}/` : ""}`;
+  const response = await got(url, { retry: { limit: 3 } });
+  const $ = cheerio.load(response.body);
+  return { $ };
+};
 
 const handleLetterBoxdResponse = ({ $ }) => {
   if (!LETTERBOXD_MAX_PAGES) {
@@ -55,40 +44,23 @@ const handleLetterBoxdResponse = ({ $ }) => {
         letterboxdRating = parseInt(ratingStr.substring(ratingStr.lastIndexOf('-') + 1));
     }
     const title = $img.attr("alt");
-    const found = movies.find({ letterboxdId }).value();
+    const found = findMovie(letterboxdId);
 
-    if (found) {
-      const updatedObj = {
-        letterboxdRating
-      };
+    const updatedObj = { title, letterboxdRating };
 
-      if (TASTE_DEFAULT_STATUS !== null) {
-        updatedObj.tasteStatus = !!TASTE_DEFAULT_STATUS;
-      }
-
-      movies
-        .find({ letterboxdId })
-        .assign(updatedObj)
-        .write();
-    } else {
-      movies
-        .push({
-          letterboxdId,
-          title,
-          letterboxdRating,
-          tasteStatus:
-            TASTE_DEFAULT_STATUS === null ? false : TASTE_DEFAULT_STATUS
-        })
-        .write();
+    if (TASTE_DEFAULT_STATUS !== null) {
+      updatedObj.tasteStatus = !!TASTE_DEFAULT_STATUS;
+    } else if (!found) {
+      updatedObj.tasteStatus = false;
     }
+
+    upsertMovie(letterboxdId, updatedObj);
 
     console.log(title, found ? "UPDATED" : "ADDED");
   });
 };
 
 (async () => {
-  await crawler.setup();
-
   const res = await getLetterboxdPage({ page: 1 });
   handleLetterBoxdResponse(res);
 
@@ -105,6 +77,4 @@ const handleLetterBoxdResponse = ({ $ }) => {
   );
 
   responses.forEach(handleLetterBoxdResponse);
-
-  process.nextTick(() => crawler.destroy());
 })();
