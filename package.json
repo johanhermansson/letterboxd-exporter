@@ -12,9 +12,9 @@
   "author": "Johan Hermansson <johan@sumway.se>",
   "license": "MIT",
   "dependencies": {
-    "async": "^3.2.2",
-    "cheerio": "^1.0.0",
-    "cookie": "^1.0.0",
-    "got": "^11.8.5"
+    "async": "^3.2.6",
+    "cheerio": "^1.2.0",
+    "cookie": "^1.1.1",
+    "got": "^11.8.6"
   }
 }
