@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 const DB_FILE = "movies.json";
 
@@ -32,4 +32,4 @@ function upsertMovie(letterboxdId, data) {
   writeDb(db);
 }
 
-module.exports = { getMovies, findMovie, upsertMovie };
+export { getMovies, findMovie, upsertMovie };

@@ -4,10 +4,10 @@ const TASTE_TOKEN = "";
 
 const REQUEST_LIMIT = 10;
 
-const got = require("got");
-const cookie = require("cookie");
-const async = require("async");
-const { getMovies, upsertMovie } = require("./db");
+import got from "got";
+import * as cookie from "cookie";
+import async from "async";
+import { getMovies, upsertMovie } from "./db.js";
 
 const serializeCookie = obj => {
   return Object.keys(obj)
