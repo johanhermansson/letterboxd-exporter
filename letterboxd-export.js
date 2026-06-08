@@ -6,9 +6,9 @@ const LETTERBOXD_USERNAME = "username";
 // Set the value to null if it should be unchanged on update
 const TASTE_DEFAULT_STATUS = null;
 
-const got = require("got");
-const cheerio = require("cheerio");
-const { findMovie, upsertMovie } = require("./db");
+import got from "got";
+import * as cheerio from "cheerio";
+import { findMovie, upsertMovie } from "./db.js";
 
 const LETTERBOXD_FILMS_BASE = `https://letterboxd.com/${LETTERBOXD_USERNAME}/films/`;
 

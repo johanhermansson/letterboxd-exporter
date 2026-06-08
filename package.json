@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node letterboxd-export.js && node taste-import.js",
     "letterboxd-export": "node letterboxd-export.js",
@@ -11,10 +12,13 @@
   },
   "author": "Johan Hermansson <johan@sumway.se>",
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "async": "^3.2.6",
     "cheerio": "^1.2.0",
     "cookie": "^1.1.1",
-    "got": "^11.8.6"
+    "got": "^15.0.5"
   }
 }
